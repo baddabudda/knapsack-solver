@@ -5,15 +5,17 @@ def to_np_array(list) -> np.array:
     return np.array(list, dtype=types)
 
 class Problem:
-    def __init__(self, total_capacity, items):
+    def __init__(self, total_capacity, items, apply_sort_by_ratio=True):
         self.total_capacity = total_capacity
         self.items = to_np_array(items)
-    
-    def get_item_profit(self, id):
-        return self.items[id][1]
-    
-    def get_item_weight(self, id):
-        return self.items[id][2]
+
+        if apply_sort_by_ratio:
+            self.sort_by_ratio()
+
+    def sort_by_ratio(self):
+        ratios = self.items['profit'] / self.items['weight']
+        sorted_indices = np.argsort(-ratios)
+        self.items = self.items[sorted_indices]
 
 class Result:
     def __init__(self, occupied_capacity, total_profit, items_taken):
